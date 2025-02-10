@@ -17,6 +17,8 @@ app.patch('/contoh', (req, res) => res.send('request method patch'))
 
 app.all('/universal', (req, res) => res.send(`request method ${req.method}`))
 
+app.get('/post/:id', (req, res) => res.send(`Artikel ke - ${req.params.id}`))
+
 const hostname = "127.0.0.1";
 const port = 3000;
 app.listen(port, hostname, () =>
