@@ -10,6 +10,12 @@ app.get('/about', (req, res) => res.status(200).json({
   message: "About Page",
   date:[]
 }));
+app.post('/contoh', (req, res) => res.send('request method post'))
+app.put('/contoh', (req, res) => res.send('request method put'))
+app.delete('/contoh', (req, res) => res.send('request method delete'))
+app.patch('/contoh', (req, res) => res.send('request method patch'))
+
+app.all('/universal', (req, res) => res.send(`request method ${req.method}`))
 
 const hostname = "127.0.0.1";
 const port = 3000;
