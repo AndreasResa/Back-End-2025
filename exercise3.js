@@ -1,5 +1,5 @@
 const moment = require('moment');
-const users = require('./users');
+const user = require('./user');
 const express = require('express');
 const app = express();
 
@@ -14,7 +14,7 @@ app.get('/about', (req, res) => res.status(200).json({
     date: moment().format('MMMM Do YYYY, h:mm:ss a')
 }))
 
-app.get('/users', (req, res) => res.status(200).json(users))
+app.get('/users', (req, res) => res.status(200).json(user))
 
 
 
