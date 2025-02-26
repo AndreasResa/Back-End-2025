@@ -1,17 +1,24 @@
-const express = require("express")
-const routers = express.Router()
+const express = require("express");
+const routers = express.Router();
+const path = require("path");
 
 // Routing
+routers.get("/download", (req, res) => {
+  const filename = "pubg.jpg";
+  // res.sendFile(path.join(__dirname + "/download/" + filename));
+  res.download(path.join(__dirname + "/download/" + filename), "game-pubg.jpg");
+});
+
 routers.post("/login", (req, res) => {
-    const { username, password } = req.body;
-    res.status(200).json({
-        status: "success",
-        message: "login page",
-        data: {
-            username : username,
-            password : password,
-        },
-      });
+  const { username, password } = req.body;
+  res.status(200).json({
+    status: "success",
+    message: "login page",
+    data: {
+      username: username,
+      password: password,
+    },
+  });
 });
 routers.get("/", (req, res) => res.send("Hello World"));
 routers.get("/about", (req, res) =>
@@ -26,10 +33,14 @@ routers.put("/contoh", (req, res) => res.send("Request method PUT"));
 routers.delete("/contoh", (req, res) => res.send("Request method DELETE"));
 routers.patch("/contoh", (req, res) => res.send("Request method PATCH"));
 
-routers.all("/universal", (req, res) => res.send(`Request method ${req.method}`));
+routers.all("/universal", (req, res) =>
+  res.send(`Request method ${req.method}`)
+);
 // Routing dinamis
 // 1. Menggunakan params
-routers.get("/post/:id", (req, res) => res.send(`Artikel ke - ${req.params.id}`));
+routers.get("/post/:id", (req, res) =>
+  res.send(`Artikel ke - ${req.params.id}`)
+);
 // 2. Menggunakan Query String
 routers.get("/post", (req, res) => {
   const { page, sort } = req.query;
