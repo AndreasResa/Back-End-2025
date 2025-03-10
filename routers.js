@@ -1,8 +1,31 @@
 const express = require("express");
 const routers = express.Router();
 const path = require("path");
+const fs = require ("fs");
+const multer = require ("multer");
+
+
+const imageFilter = (req, file, cb) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    return cb(null, false);
+  }
+  cb(null, true);
+};
+
+const upload = multer({ dest: "public", fileFilter: imageFilter });
 
 // Routing
+routers.post("/upload", upload.single("file"), (req, res) => {
+  const file = req.file;
+  if (file) {
+    const target = path.join(__dirname, "public", file.originalname);
+    fs.renameSync(file.path, target); //rename file agar sama dengan original file name
+    res.send("file berhasil diupload");
+  } else {
+    res.send("file gagal diupload");
+  }
+});
+
 routers.get("/download", (req, res) => {
   const filename = "pubg.jpg";
   // res.sendFile(path.join(__dirname + "/download/" + filename));
@@ -46,5 +69,10 @@ routers.get("/post", (req, res) => {
   const { page, sort } = req.query;
   res.send(`Query string= page :${page}, sort : ${sort}`);
 });
+
+
+
+
+
 
 module.exports = routers;
