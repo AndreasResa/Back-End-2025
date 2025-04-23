@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const app = express();
 const routers = require("./routers");
 const path = require("path");
+const cors = require("cors");
 
 //Middleware
 const log = (req, res, next) => {

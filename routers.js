@@ -3,9 +3,11 @@ const routers = express.Router();
 const path = require("path");
 const fs = require ("fs");
 const multer = require ("multer");
-const client = require("./mongodb");
-const ObjectId = require("mongodb").ObjectId;
+// const client = require("./mongodb");
+// const ObjectId = require("mongodb").ObjectId;
 
+require("./mongoose");
+const Users = require("./Users");
 
 const imageFilter = (req, file, cb) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
@@ -17,6 +19,40 @@ const imageFilter = (req, file, cb) => {
 const upload = multer({ dest: "public", fileFilter: imageFilter });
 
 // Routing
+//Get all users mongoose
+routers.get("/users", async (req, res) => {
+  const users = await Users.find();
+  res.json({
+    status: "success!!!",
+    message: "list users",
+    data: users,
+  });
+});
+
+routers.get("/users/:id", async (req, res) => {
+  id = req.params.id;
+  const users = await Users.findById(id);
+  res.json({
+    status: "success",
+    message: "list users",
+    data: users,
+  });
+});
+
+routers.post("/users", async (req, res) => {
+  const { name, age, status } = req.body;
+  const newUser = await Users.create({
+    name: name,
+    age: age,
+    status: status,
+  });
+  res.json({
+    status: "success",
+    message: "insert users",
+    data: newUser,
+  });
+});
+
 // Get all users
 routers.get("/users", async (req, res) => {
   try {
@@ -35,23 +71,23 @@ routers.get("/users", async (req, res) => {
 });
 
 // Get single user
-routers.get("/users/:id", async (req, res) => {
-  try {
-    const db = client.db("latihan");
-    const user = await db.collection("users").findOne({
-      _id: new ObjectId(req.params.id),
-    });
-    res.status(200).json({
-      status: "success",
-      message: "single user",
-      data: user,
-    });
-  } catch (error) {
-    res.json({
-      status: "error",
-    });
-  }
-});
+// routers.get("/users/:id", async (req, res) => {
+//   try {
+//     const db = client.db("latihan");
+//     const user = await db.collection("users").findOne({
+//       _id: new ObjectId(req.params.id),
+//     });
+//     res.status(200).json({
+//       status: "success",
+//       message: "single user",
+//       data: user,
+//     });
+//   } catch (error) {
+//     res.json({
+//       status: "error",
+//     });
+//   }
+// });
 
 routers.post("/upload", upload.single("file"), (req, res) => {
   const file = req.file;
@@ -89,6 +125,7 @@ routers.get("/about", (req, res) =>
     data: [],
   })
 );
+
 routers.post("/contoh", (req, res) => res.send("request method POST"));
 routers.put("/contoh", (req, res) => res.send("Request method PUT"));
 routers.delete("/contoh", (req, res) => res.send("Request method DELETE"));
@@ -107,10 +144,5 @@ routers.get("/post", (req, res) => {
   const { page, sort } = req.query;
   res.send(`Query string= page :${page}, sort : ${sort}`);
 });
-
-
-
-
-
 
 module.exports = routers;
